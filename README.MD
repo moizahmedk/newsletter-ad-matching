@@ -124,7 +124,7 @@ Evaluation is separated from training and inference.
 
 All evaluation code lives in:
 ```
-notebooks/02_evaluation.ipynb
+notebooks/Ad_Matching_ML_System_test.ipynb
 ```
 
 ---
@@ -138,8 +138,8 @@ newsletter-ad-matching-ml/
 │   └── ads.csv
 │
 ├── notebooks/
-│   ├── exploration.ipynb
-│   └── 02_evaluation.ipynb
+│   ├── Ad_Matching_ML_System_train.ipynb
+│   └── Ad_Matching_ML_System_test.ipynb
 │
 ├── src/
 │   ├── embeddings.py
