@@ -3,7 +3,7 @@
 
 > End-to-end machine learning system that matches newsletter content to relevant advertisements using transformer embeddings, vector similarity search, CTR prediction, and multi-objective ranking.
 
-This project is inspired by real-world newsletter ad networks (e.g. beehiiv) and demonstrates how production ML systems are designed, evaluated, and deployed.
+This project is inspired by real-world newsletter ad networks and demonstrates how production ML systems are designed, evaluated, and deployed.
 
 ---
 
