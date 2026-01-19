@@ -1,0 +1,72 @@
+# ===============================
+# Python
+# ===============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+
+# ===============================
+# Virtual Environments
+# ===============================
+venv/
+.env/
+.venv/
+
+# ===============================
+# Jupyter / Colab
+# ===============================
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# ===============================
+# ML Artifacts (Generated)
+# ===============================
+mlruns/
+*.log
+*.tmp
+
+# ===============================
+# OS Files
+# ===============================
+.DS_Store
+Thumbs.db
+
+# ===============================
+# Editor / IDE
+# ===============================
+.vscode/
+.idea/
+*.swp
+
+# ===============================
+# Data (Raw / Large)
+# ===============================
+data/raw/*
+data/processed/*
+
+# keep folder structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# ===============================
+# Model Artifacts
+# ===============================
+models/*.pt
+models/*.h5
+models/*.ckpt
+models/*.onnx
+
+# (OPTION A) Ignore trained models
+# Uncomment if you don't want to commit binaries
+# models/*.pkl
+# models/*.npy
+# models/*.index
+
+# ===============================
+# API / Runtime
+# ===============================
+.env.local
