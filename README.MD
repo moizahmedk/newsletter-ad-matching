@@ -1,34 +1,35 @@
-Newsletter Ad Matching System
+# Newsletter Ad Matching System  
+**Production-Style ML System for Semantic Ad Ranking & CTR Optimization**
 
-Production-Style ML System for Semantic Ad Ranking & CTR Optimization
-
-End-to-end machine learning system that matches newsletter content to relevant advertisements using transformer embeddings, vector similarity search, CTR prediction, and multi-objective ranking.
+> End-to-end machine learning system that matches newsletter content to relevant advertisements using transformer embeddings, vector similarity search, CTR prediction, and multi-objective ranking.
 
 This project is inspired by real-world newsletter ad networks (e.g. beehiiv) and demonstrates how production ML systems are designed, evaluated, and deployed.
 
-🔍 Problem Statement
+---
+
+## 🔍 Problem Statement
 
 Newsletter platforms must select ads that are:
+- **Semantically relevant** to content
+- **Likely to be clicked** (high CTR)
+- **Fairly distributed** across advertisers
+- **Fast enough** for real-time serving
 
-Semantically relevant to content
+This project solves the problem by combining **NLP embeddings**, **CTR prediction**, and **ranking logic** into a production-ready ML pipeline.
 
-Likely to be clicked (high CTR)
+---
 
-Fairly distributed across advertisers
+## 🧠 System Overview
 
-Fast enough for real-time serving
+**Input:**  
+Newsletter article text  
 
-This project solves the problem by combining NLP embeddings, CTR prediction, and ranking logic into a production-ready ML pipeline.
+**Output:**  
+Top-K ranked advertisements optimized for relevance and CTR  
 
-🧠 System Overview
+### High-Level Architecture
 
-Input:
-Newsletter article text
-
-Output:
-Top-K ranked advertisements optimized for relevance and CTR
-
-High-Level Architecture
+```
 Newsletter Text
       ↓
 Transformer Embedding (SentenceTransformer)
@@ -40,108 +41,97 @@ CTR Prediction (Supervised Model)
 Multi-Objective Ranking
       ↓
 FastAPI Inference Endpoint
+```
 
-🧩 Core Components
-1. NLP Embeddings
+---
 
-Model: all-MiniLM-L6-v2
+## 🧩 Core Components
 
-Embeds:
+### 1. NLP Embeddings
+- Model: `all-MiniLM-L6-v2`
+- Embeds:
+  - Newsletter content
+  - Ad creatives
+- Enables semantic similarity beyond keyword matching
 
-Newsletter content
+---
 
-Ad creatives
+### 2. Vector Search
+- FAISS (Inner Product / Cosine similarity)
+- Retrieves candidate ads efficiently
+- Scales to large embedding collections
 
-Enables semantic similarity beyond keyword matching
+---
 
-2. Vector Search
+### 3. CTR Prediction Model
+- Model: Logistic Regression (baseline, interpretable)
+- Features:
+  - Content–ad semantic similarity
+  - Historical ad CTR
+- Metrics:
+  - ROC-AUC
+  - Log Loss
+  - Precision–Recall AUC
 
-FAISS (Inner Product / Cosine similarity)
+---
 
-Retrieves candidate ads efficiently
-
-Scales to large embedding collections
-
-3. CTR Prediction Model
-
-Model: Logistic Regression (baseline, interpretable)
-
-Features:
-
-Content–ad semantic similarity
-
-Historical ad CTR
-
-Metrics:
-
-ROC-AUC
-
-Log Loss
-
-Precision–Recall AUC
-
-4. Multi-Objective Ranking
-
+### 4. Multi-Objective Ranking
 Final score combines:
-
+```
 Final Score =
   0.7 × Predicted CTR
 + 0.3 × Semantic Similarity
+```
 
+This mirrors real ad systems where **business objectives and ML signals are blended**.
 
-This mirrors real ad systems where business objectives and ML signals are blended.
+---
 
-5. Production Inference API
-
-FastAPI service
-
-Stateless inference
-
-Loads:
-
-Trained CTR model
-
-Precomputed embeddings
-
-FAISS index
+### 5. Production Inference API
+- FastAPI service
+- Stateless inference
+- Loads:
+  - Trained CTR model
+  - Precomputed embeddings
+  - FAISS index
 
 Example request:
-
+```json
 POST /recommend
 {
   "newsletter_text": "AI tools for startup productivity",
   "top_k": 3
 }
+```
 
-🧪 Evaluation Strategy
+---
+
+## 🧪 Evaluation Strategy
 
 Evaluation is separated from training and inference.
 
-Offline Metrics
+### Offline Metrics
+- CTR Model:
+  - ROC-AUC
+  - Log Loss
+  - Precision–Recall Curve
+- Ranking:
+  - Mean Reciprocal Rank (MRR)
 
-CTR Model:
-
-ROC-AUC
-
-Log Loss
-
-Precision–Recall Curve
-
-Ranking:
-
-Mean Reciprocal Rank (MRR)
-
-Qualitative Checks
-
-Semantic retrieval sanity tests
-
-End-to-end ranking inspection
+### Qualitative Checks
+- Semantic retrieval sanity tests
+- End-to-end ranking inspection
 
 All evaluation code lives in:
-
+```
 notebooks/02_evaluation.ipynb
+```
 
-📁 Repository Structure
+---
+
+## 📁 Repository Structure
+
+```
 newsletter-ad-matching-ml/
 │
 ├── data/
@@ -169,89 +159,85 @@ newsletter-ad-matching-ml/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
 
-🚀 How to Run
-1. Install Dependencies
+---
+
+## 🚀 How to Run
+
+### 1. Install Dependencies
+```bash
 pip install -r requirements.txt
+```
 
-2. Start API
+### 2. Start API
+```bash
 uvicorn api.main:app --reload
+```
 
-3. Test Endpoint
+### 3. Test Endpoint
+```bash
 curl -X POST "http://127.0.0.1:8000/recommend" \
      -H "Content-Type: application/json" \
      -d '{"newsletter_text": "AI startups using cloud tools", "top_k": 3}'
+```
 
-🛠 Tech Stack
+---
 
-Python
+## 🛠 Tech Stack
 
-SentenceTransformers
+- **Python**
+- **SentenceTransformers**
+- **FAISS**
+- **scikit-learn**
+- **FastAPI**
+- **MLflow (optional)**
+- **NumPy / Pandas**
 
-FAISS
+---
 
-scikit-learn
-
-FastAPI
-
-MLflow (optional)
-
-NumPy / Pandas
-
-📈 Scalability & Production Notes
+## 📈 Scalability & Production Notes
 
 This system is intentionally designed to scale:
 
-Embeddings can be precomputed offline
+- Embeddings can be precomputed offline
+- FAISS supports millions of vectors
+- CTR model can be replaced with:
+  - XGBoost
+  - Deep learning models
+- Ranking layer supports:
+  - Budget constraints
+  - Frequency capping
+  - Multi-objective optimization
+- Easily deployable via Docker + ECS/EKS
 
-FAISS supports millions of vectors
+---
 
-CTR model can be replaced with:
+## 🔮 Future Improvements
 
-XGBoost
+- Online learning / feedback loops
+- Cold-start handling using content priors
+- Subscriber-level personalization
+- Vector databases (Qdrant / Pinecone)
+- Model monitoring & drift detection
+- Multi-armed bandits for exploration
 
-Deep learning models
+---
 
-Ranking layer supports:
-
-Budget constraints
-
-Frequency capping
-
-Multi-objective optimization
-
-Easily deployable via Docker + ECS/EKS
-
-🔮 Future Improvements
-
-Online learning / feedback loops
-
-Cold-start handling using content priors
-
-Subscriber-level personalization
-
-Vector databases (Qdrant / Pinecone)
-
-Model monitoring & drift detection
-
-Multi-armed bandits for exploration
-
-🎯 Why This Project
+## 🎯 Why This Project
 
 This project demonstrates:
+- End-to-end ML ownership
+- Production-oriented thinking
+- Ranking & optimization experience
+- NLP + vector search expertise
+- Real-world ad system design
 
-End-to-end ML ownership
+Built to reflect the responsibilities of a **Senior Machine Learning Engineer** working on **high-volume ad and content systems**.
 
-Production-oriented thinking
+---
 
-Ranking & optimization experience
+## 📌 Author
 
-NLP + vector search expertise
-
-Real-world ad system design
-
-
-📌 Author
-
-Moiz Ahmed Khan
-Machine Learning Engineer | Computer Vision | Production ML Systems
+**Moiz Ahmed Khan**  
+Machine Learning Engineer | Computer Vision | Production ML Systems  
